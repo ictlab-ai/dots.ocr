@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     poppler-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Обновляем pip
+# Обновляем pip, setuptools и wheel
 RUN python -m pip install --upgrade pip setuptools wheel
 
 # Устанавливаем dots.ocr
