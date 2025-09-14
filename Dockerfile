@@ -1,4 +1,3 @@
-# Лёгкий Python образ
 FROM python:3.10-slim
 
 WORKDIR /app
@@ -10,16 +9,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr libleptonica-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Обновляем pip, setuptools и wheel
+# pip
 RUN python -m pip install --upgrade pip setuptools wheel
 
 # CPU PyTorch
 ENV FORCE_CUDA=0
 RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 
-# Копируем dots.ocr напрямую
-RUN git clone https://github.com/ictlab-ai/dots.ocr.git /tmp/dots.ocr
-COPY /tmp/dots.ocr/dots /app/dots
+# Копируем dots.ocr из контекста сборки
+COPY dots /app/dots
 
 # Flask
 RUN pip install --no-cache-dir flask
