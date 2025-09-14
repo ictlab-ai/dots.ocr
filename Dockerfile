@@ -1,4 +1,4 @@
-# Используем полный образ Python 3.12
+# Полный образ Python 3.12, не slim
 FROM python:3.12
 
 WORKDIR /app
@@ -11,12 +11,12 @@ RUN apt-get update && apt-get install -y \
 # Обновляем pip, setuptools и wheel
 RUN python -m pip install --upgrade pip setuptools wheel
 
-# Устанавливаем dots.ocr и Flask
+# Ставим dots.ocr и Flask отдельно
 RUN pip install --no-cache-dir git+https://github.com/ictlab-ai/dots.ocr.git
 RUN pip install --no-cache-dir flask
 
-# Копируем API внутрь контейнера
+# Копируем наш API внутрь контейнера
 COPY ocr_api.py /app/
 
-# Запуск Flask
+# Команда запуска
 CMD ["python", "ocr_api.py"]
