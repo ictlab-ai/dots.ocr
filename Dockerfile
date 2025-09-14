@@ -13,7 +13,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Обновляем pip, setuptools и wheel
 RUN python -m pip install --upgrade pip setuptools wheel
 
-# Устанавливаем PyTorch (CPU)
+# Говорим сборке, что CUDA не используется
+ENV FORCE_CUDA=0
+
+# Устанавливаем PyTorch CPU-версию
 RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 
 # Клонируем dots.ocr и ставим локально
