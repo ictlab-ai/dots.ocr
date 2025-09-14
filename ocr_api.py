@@ -4,7 +4,7 @@ import dots.ocr as dots
 
 app = Flask(__name__)
 
-API_TOKEN = os.environ.get("OCR_API_TOKEN")  # токен (если хочешь ограничить доступ)
+API_TOKEN = os.environ.get("OCR_API_TOKEN")  # токен для авторизации
 
 @app.route("/ocr", methods=["POST"])
 def ocr():
@@ -24,5 +24,5 @@ def ocr():
         return jsonify({"error": "ocr_failed", "details": str(e)}), 500
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # важно для Render
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
