@@ -1,10 +1,8 @@
-# Базовый образ Python 3.12 (не slim, чтобы dots.ocr собирался корректно)
 FROM python:3.12
 
-# Рабочая директория внутри контейнера
 WORKDIR /app
 
-# Устанавливаем системные зависимости для сборки dots.ocr и Python пакетов
+# Системные зависимости
 RUN apt-get update && apt-get install -y \
     git \
     build-essential \
@@ -12,14 +10,17 @@ RUN apt-get update && apt-get install -y \
     poppler-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Обновляем pip, setuptools и wheel
+# Обновляем pip
 RUN python -m pip install --upgrade pip setuptools wheel
 
-# Устанавливаем dots.ocr и Flask
-RUN pip install --no-cache-dir git+https://github.com/ictlab-ai/dots.ocr.git flask
+# Устанавливаем dots.ocr
+RUN pip install --no-cache-dir git+https://github.com/ictlab-ai/dots.ocr.git
 
-# Копируем API внутрь контейнера
+# Устанавливаем Flask
+RUN pip install --no-cache-dir flask
+
+# Копируем API
 COPY ocr_api.py /app/
 
-# Запуск Flask, порт берется из переменной $PORT для Render
+# Запуск сервиса
 CMD ["python", "ocr_api.py"]
