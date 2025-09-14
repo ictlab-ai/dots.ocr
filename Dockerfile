@@ -10,11 +10,13 @@ RUN apt-get update && apt-get install -y \
 # Обновляем pip
 RUN python -m pip install --upgrade pip setuptools wheel
 
-# Ставим PyTorch (CPU-версия, чтобы не было проблем с CUDA)
+# Ставим PyTorch (CPU-версия)
 RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 
-# Устанавливаем dots.ocr и Flask
+# Теперь можно ставить dots.ocr
 RUN pip install --no-cache-dir git+https://github.com/ictlab-ai/dots.ocr.git
+
+# Ставим Flask
 RUN pip install --no-cache-dir flask
 
 # Копируем API
