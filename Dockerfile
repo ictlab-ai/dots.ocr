@@ -20,8 +20,9 @@ ENV FORCE_CUDA=0
 # Устанавливаем PyTorch CPU-версию
 RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 
-# Ставим dots.ocr прямо из Git с флагом prefer-binary (чтобы сборка не падала)
-RUN pip install --no-cache-dir --prefer-binary git+https://github.com/ictlab-ai/dots.ocr.git
+# Клонируем dots.ocr и ставим через setup.py
+RUN git clone https://github.com/ictlab-ai/dots.ocr.git /dots.ocr
+RUN cd /dots.ocr && python setup.py install
 
 # Устанавливаем Flask
 RUN pip install --no-cache-dir flask
