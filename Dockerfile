@@ -1,10 +1,9 @@
 # Лёгкий Python образ
 FROM python:3.10-slim
 
-# Рабочая директория
 WORKDIR /app
 
-# Системные зависимости для сборки Python-пакетов и OCR
+# Системные зависимости
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git build-essential python3-dev libffi-dev libssl-dev libjpeg-dev zlib1g-dev \
     libmagic-dev poppler-utils libgl1 libglib2.0-0 \
@@ -14,24 +13,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Обновляем pip, setuptools и wheel
 RUN python -m pip install --upgrade pip setuptools wheel
 
-# Переменная, чтобы сборка не искала CUDA
+# CPU PyTorch
 ENV FORCE_CUDA=0
-
-# Устанавливаем PyTorch CPU-версию
 RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 
-# Клонируем dots.ocr и ставим через setup.py
-RUN git clone https://github.com/ictlab-ai/dots.ocr.git /dots.ocr
-RUN cd /dots.ocr && python setup.py install
+# Копируем dots.ocr напрямую
+RUN git clone https://github.com/ictlab-ai/dots.ocr.git /tmp/dots.ocr
+COPY /tmp/dots.ocr/dots /app/dots
 
-# Устанавливаем Flask
+# Flask
 RUN pip install --no-cache-dir flask
 
-# Копируем Flask API
+# Копируем API
 COPY ocr_api.py /app/
 
-# Экспонируем условный порт (Render назначает свой через переменную PORT)
 EXPOSE 5000
-
-# Запуск Flask с универсальным портом
 CMD ["sh", "-c", "python ocr_api.py"]
